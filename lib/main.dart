@@ -29,15 +29,16 @@ class HomePage extends StatelessWidget {
   Future<List<AssetData>> getJsonDecodedData() async {
     final dataInString = await rootBundle.loadString('assets/assets.json');
     final Map<String, dynamic> assetData = jsonDecode(dataInString)['assets'];
-    final parsedData = assetData.entries
-        .map(
-          (e) => AssetData(
-            year: e.key,
-            yearlyData: (e.value as List<dynamic>).map((e1) => YearlyData.fromMap(e1)).toList(),
-          ),
-        )
-        .toList();
-    return parsedData.where((element) => element.yearlyData.isNotEmpty).toList();
+    List<AssetData> assetsDataList = [];
+    for (var e in assetData.entries) {
+      if ((e.value as List<dynamic>).isNotEmpty) {
+        assetsDataList.add(AssetData(
+          year: e.key,
+          yearlyData: (e.value as List<dynamic>).map((e1) => YearlyData.fromMap(e1)).toList(),
+        ));
+      }
+    }
+    return assetsDataList;
   }
 
   @override
